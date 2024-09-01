@@ -16,7 +16,7 @@ Before running the tool, ensure you have the following:
 - Rust installed on your system.
 - A Microsoft Azure app registration with a `client_id`, `client_secret`, and `tenant_id`.
 - The following Microsoft Graph API permissions granted to your Azure app registration:
-  - `Mail.Send`: Allows the application to send emails as any user.
+  - **`Mail.Send**: Allows the application to send emails as any user.
 - A `.env` file containing your Azure credentials.
 
 ## Installation
