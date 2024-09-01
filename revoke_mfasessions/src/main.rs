@@ -1,18 +1,43 @@
 use anyhow::{Context, Result};
-use clap::{Arg, ArgAction, Command};
+use clap::Parser;
 use env_logger::Builder;
 use log::{debug, info, LevelFilter};
 use reqwest::Client;
 use std::env;
-use std::error::Error;
 use std::path::PathBuf;
 
 mod auth;
 
-#[derive(Debug)]
+#[derive(Parser, Debug)]
 struct AppConfig {
+    #[arg(short, long, help = "User Principal Name")]
     upn: String,
+
+    #[arg(short, long, help = "Enable verbose logging")]
     verbose: bool,
+}
+
+fn setup_logger(verbose: bool) {
+    let mut builder = Builder::from_default_env();
+    builder.filter(
+        None,
+        if verbose {
+            LevelFilter::Debug
+        } else {
+            LevelFilter::Info
+        },
+    );
+    builder.init();
+}
+
+fn get_env_file_path() -> Result<PathBuf> {
+    let mut exe_path = std::env::current_exe().context("Failed to get current executable path")?;
+    exe_path.pop();
+    debug!("Executable path: {:?}", exe_path);
+
+    let mut env_path = exe_path;
+    env_path.push(".env");
+    Ok(env_path)
 }
 
 async fn get_access_token_from_env(verbose: bool) -> Result<String> {
@@ -28,17 +53,7 @@ async fn get_access_token_from_env(verbose: bool) -> Result<String> {
     auth::get_access_token(&tenant_id, &client_id, &client_secret, verbose).await
 }
 
-fn get_env_file_path() -> Result<PathBuf> {
-    let mut exe_path = std::env::current_exe().context("Failed to get current executable path")?;
-    exe_path.pop();
-    debug!("Executable path: {:?}", exe_path);
-
-    let mut env_path = exe_path;
-    env_path.push(".env");
-    Ok(env_path)
-}
-
-async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<(), Box<dyn Error>> {
+async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<()> {
     let url = format!(
         "https://graph.microsoft.com/v1.0/users/{}/revokeSignInSessions",
         upn
@@ -52,13 +67,13 @@ async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<(), Bo
         .json(&serde_json::json!({}))
         .send()
         .await
-        .map_err(|e| format!("Failed to send request: {}", e))?;
+        .context("Failed to send request")?;
 
     let status = response.status();
     let response_text = response
         .text()
         .await
-        .map_err(|e| format!("Failed to get response text: {}", e))?;
+        .context("Failed to get response text")?;
 
     debug!("Response status: {:?}", status);
     debug!("Response text: {:?}", response_text);
@@ -67,58 +82,18 @@ async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<(), Bo
         info!("Sign-in sessions revoked successfully for user {}.", upn);
         Ok(())
     } else {
-        Err(format!(
+        Err(anyhow::anyhow!(
             "Failed to revoke sign-in sessions for user {}: {} - {}",
-            upn, status, response_text
-        )
-        .into())
+            upn,
+            status,
+            response_text
+        ))
     }
-}
-
-fn parse_args() -> AppConfig {
-    let matches = Command::new("RevokeSessionService")
-        .version("1.0")
-        .author("Bryan Abbott <bryan.abbott01@pm.me>")
-        .about("Revokes sign-in sessions using the Microsoft API")
-        .arg(
-            Arg::new("upn")
-                .short('u')
-                .long("upn")
-                .value_name("UPN")
-                .help("User Principal Name")
-                .required(true),
-        )
-        .arg(
-            Arg::new("verbose")
-                .short('v')
-                .long("verbose")
-                .help("Enable verbose logging")
-                .action(ArgAction::SetTrue),
-        )
-        .get_matches();
-
-    AppConfig {
-        upn: matches
-            .get_one::<String>("upn")
-            .expect("UPN is required")
-            .clone(),
-        verbose: *matches.get_one::<bool>("verbose").unwrap(),
-    }
-}
-
-fn setup_logger(verbose: bool) {
-    let mut builder = Builder::from_default_env();
-    if verbose {
-        builder.filter(None, LevelFilter::Debug);
-    } else {
-        builder.filter(None, LevelFilter::Info);
-    }
-    builder.init();
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    let config = parse_args();
+async fn main() -> Result<()> {
+    let config = AppConfig::parse();
     setup_logger(config.verbose);
 
     info!("Starting RevokeSessionService");
