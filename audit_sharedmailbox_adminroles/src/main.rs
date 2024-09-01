@@ -167,6 +167,44 @@ async fn get_mailbox_settings(
         Err(anyhow::anyhow!("HTTP error: {}", error_text))
     }
 }
+async fn process_directory_roles(client: &Client, access_token: &str) -> Result<Vec<String>> {
+    let mut shared_mailboxes = Vec::new();
+    let roles = fetch_directory_roles(access_token).await?;
+
+    info!("Fetched {} directory roles", roles.len());
+    for role in roles {
+        println!("Role ID: {}, DisplayName: {}", role.id, role.displayName);
+        let members = fetch_directory_role_members(client, access_token, &role.id).await;
+        for member in members {
+            println!(
+                " - Member ID: {}, DisplayName: {}, UserPrincipalName: {}",
+                member.id, member.displayName, member.userPrincipalName
+            );
+
+            match get_mailbox_settings(client, access_token, &member.userPrincipalName).await {
+                Ok(mailbox_settings) => {
+                    debug!(
+                        "Mailbox settings for {}: {:?}",
+                        member.userPrincipalName, mailbox_settings
+                    );
+                    if let Some(purpose) = mailbox_settings.user_purpose {
+                        if purpose.to_lowercase() == "shared" {
+                            shared_mailboxes.push(member.userPrincipalName);
+                        }
+                    }
+                }
+                Err(e) => {
+                    error!(
+                        "Failed to fetch mailbox settings for {}: {:?}",
+                        member.userPrincipalName, e
+                    );
+                }
+            }
+        }
+    }
+
+    Ok(shared_mailboxes)
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -196,34 +234,12 @@ async fn main() -> Result<()> {
         .await
         .context("Failed to obtain access token")?;
 
-    let roles = fetch_directory_roles(&access_token).await?;
-
-    info!("Fetched {} directory roles", roles.len());
     let client = Client::new();
-    for role in roles {
-        println!("Role ID: {}, DisplayName: {}", role.id, role.displayName);
-        let members = fetch_directory_role_members(&client, &access_token, &role.id).await;
-        for member in members {
-            println!(
-                " - Member ID: {}, DisplayName: {}, UserPrincipalName: {}",
-                member.id, member.displayName, member.userPrincipalName
-            );
+    let shared_mailboxes = process_directory_roles(&client, &access_token).await?;
 
-            match get_mailbox_settings(&client, &access_token, &member.userPrincipalName).await {
-                Ok(mailbox_settings) => {
-                    debug!(
-                        "Mailbox settings for {}: {:?}",
-                        member.userPrincipalName, mailbox_settings
-                    );
-                }
-                Err(e) => {
-                    error!(
-                        "Failed to fetch mailbox settings for {}: {:?}",
-                        member.userPrincipalName, e
-                    );
-                }
-            }
-        }
+    println!("\nShared Mailboxes:");
+    for mailbox in shared_mailboxes {
+        println!("{} is a sharedmailbox with an admin role.", mailbox);
     }
 
     Ok(())
