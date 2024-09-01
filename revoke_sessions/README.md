@@ -51,17 +51,17 @@ To use the RevokeSessionService, run the following command:
 ### Example
 
 ```bash
-./target/release/revoke_sessions -u john.doe@company.com -v
+./target/release/revoke_sessions -u john.doe@contoso.com -v
 ```
 
-This command will revoke all sign-in sessions for john.doe@company.com and print detailed logs.
+This command will revoke all sign-in sessions for john.doe@contoso.com and print detailed logs.
 
 ## Logging
 
 RevokeSessionService uses the env_logger crate for logging. You can control the log output by setting the RUST_LOG environment variable:
 
 ```bash
-RUST_LOG=info ./target/release/revoke_sessions -u john.doe@company.com
+RUST_LOG=info ./target/release/revoke_sessions -u john.doe@contoso.com
 ```
 
 Set RUST_LOG=debug for more detailed logging.
