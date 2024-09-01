@@ -2,7 +2,7 @@
 name = "revoke_sessions"
 version = "0.1.0"
 edition = "2021"
-description = "A Rust-based CLI tool to revoke Microsoft 365 sign-in sessions for users based on company credentials."
+description = "A Rust-based CLI tool to revoke Microsoft 365 sign-in sessions for users."
 authors = ["Bryan Abbott <bryan.abbott01@pm.me>"]
 repository = "https://github.com/whitefox82/microsoft_services_tools"
 

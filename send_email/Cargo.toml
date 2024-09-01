@@ -2,7 +2,8 @@
 name = "send_email"
 version = "0.1.0"
 edition = "2021"
-authors = ["Bryan Abbott <bryan.abbott01@pm.me"]
+description = "A Rust-based CLI tool to send emails using Microsoft Graph API."
+authors = ["Bryan Abbott <bryan.abbott01@pm.me>"]
 repository = "https://github.com/whitefox82/microsoft_services_tools"
 
 [dependencies]
