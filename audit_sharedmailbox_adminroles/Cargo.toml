@@ -2,9 +2,10 @@
 name = "audit_sharedmailbox_adminroles"
 version = "0.1.0"
 edition = "2021"
-description = ""
+description = "A Rust CLI tool for auditing Microsoft 365 directory roles and identifying shared mailboxes with administrative roles."
 authors = ["Bryan Abbott <bryan.abbott01@pm.me>"]
 repository = "https://github.com/whitefox82/microsoft_services_tools"
+
 
 [dependencies]
 anyhow = "1.0"
