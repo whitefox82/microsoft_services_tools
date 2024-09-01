@@ -15,46 +15,30 @@ Before running the tool, ensure you have the following:
 
 - Rust installed on your system.
 - A Microsoft Azure app registration with a `client_id`, `client_secret`, and `tenant_id`.
+- The following Microsoft Graph API permissions granted to your Azure app registration:
+  - `Mail.Send`: Allows the application to send emails as any user.
 - A `.env` file containing your Azure credentials.
 
 ## Installation
 
-1. Clone the repository:
-
-    ```sh
-    git clone https://github.com/yourusername/send_email.git
-    cd send_email
+1. **Clone the Repository**:
+    ```bash
+    git clone git@github.com:whitefox82/microsoft_services_tools.git
+    cd microsoft_services_tools/send_email/
     ```
 
-2. Add the necessary dependencies to your `Cargo.toml`:
-
-    ```toml
-    [dependencies]
-    anyhow = "1.0"
-    clap = { version = "4.0", features = ["derive"] }
-    dotenv = "0.15.0"
-    env_logger = "0.11.5"
-    log = "0.4.11"
-    regex = "1.5"
-    reqwest = { version = "0.12.7", features = ["json"] }
-    serde = { version = "1.0", features = ["derive"] }
-    serde_derive = "1.0"
-    serde_json = "1.0"
-    tokio = { version = "1", features = ["full"] }
-    ```
-
-3. Create a `.env` file in the root directory with your Azure credentials:
-
-    ```env
-    TENANT_ID=your_tenant_id
-    CLIENT_ID=your_client_id
-    CLIENT_SECRET=your_client_secret
-    ```
-
-4. Build the project:
-
-    ```sh
+2. **Build the Project**:
+    Make sure you have Rust installed on your machine. You can build the project with Cargo:
+    ```bash
     cargo build --release
+    ```
+
+3. **Set Up Environment Variables**:
+    Create a `.env` file in the root of the project and add the following variables:
+    ```env
+    TENANT_ID=<your-tenant-id>
+    CLIENT_ID=<your-client-id>
+    CLIENT_SECRET=<your-client-secret>
     ```
 
 ## Usage
