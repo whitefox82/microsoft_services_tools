@@ -46,7 +46,7 @@ Before running the tool, ensure you have the following:
 To run the email sending tool, use the following command:
 
 ```sh
-./target/release/send_email --email recipient@example.com --subject "Your Subject" --body "Your Email Body" --sender sender@example.com
+./target/release/send_email --email recipient@contoso.com --subject "Your Subject" --body "Your Email Body" --sender sender@contoso.com
 ```
 
 ### Options
@@ -60,7 +60,7 @@ To run the email sending tool, use the following command:
 Example with verbose logging:
 
 ```sh
-./target/release/send_email --email recipient@example.com --subject "Test Email" --body "Hello, this is a test." --sender sender@example.com --verbose
+./target/release/send_email --email recipient@contoso.com --subject "Test Email" --body "Hello, this is a test." --sender sender@contoso.com --verbose
 ```
 
 ## Logging
@@ -68,7 +68,7 @@ Example with verbose logging:
 The tool uses the env_logger crate for logging. You can control the log level using the RUST_LOG environment variable:
 
 ```sh
-RUST_LOG=debug ./target/release/send_email --email recipient@example.com --subject "Test Email" --body "Hello, this is a test." --sender sender@example.com
+RUST_LOG=debug ./target/release/send_email --email recipient@contoso.com --subject "Test Email" --body "Hello, this is a test." --sender sender@contoso.com
 ```
 
 ## License
