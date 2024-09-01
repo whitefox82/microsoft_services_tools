@@ -20,8 +20,8 @@ This tool is designed to help developers interact with Microsoft APIs by providi
 
 1. **Clone the Repository**:
     ```bash
-    git clone git@github.com:whitefox82/api_template.git
-    cd api_template/
+    git clone git@github.com:whitefox82/microsoft_services_tools.git
+    cd microsoft_services_tools/api_template/
     ```
 
 2. **Build the Project**:

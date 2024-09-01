@@ -23,8 +23,8 @@ Before running the tool, ensure you have the following:
 
 1. **Clone the Repository**:
     ```bash
-    git clone git@github.com:<your-username>/sku-availability-checker.git
-    cd sku-availability-checker/
+    git clone git@github.com:whitefox82/microsoft_services_tools.git
+    cd microsoft_services_tools/sku-availability-checker/
     ```
 
 2. **Install Dependencies**:
