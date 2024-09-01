@@ -1,17 +1,54 @@
-**/debug/
+# Go-specific ignores
+**/bin/
+**/pkg/
+**/out/
+**/*.exe
+**/*.test
+**/*.prof
+**/*.a
+**/*.cover
+**/.cgo/
+
+# Rust-specific ignores
 **/target/
 **/*.rs.bk
 **/*.pdb
-**/target/
+**/*.dSYM/
+**/*.stackdump
+
+# GoLand / IntelliJ IDEA specific
 **/.idea/
+
+# VS Code specific
 **/.vscode/
+
+# macOS specific
 **/.DS_Store
+
+# Logs and temporary files
 **/*.log
 **/*.tmp
 **/*.swp
 **/*.bak
 **/*.old
 **/*.save
+
+# Debug, build and temporary directories
+**/debug/
+**/target/
+
+# Backup files
+**/*.rs.bk
+**/*.pdb
+**/*.xlsx
+**/*.swp
+
+# Environment files
 **/.env
 **/*env*/
-**/*.xlsx
+
+# Other
+**/*.test
+**/*.prof
+**/*.out
+**/*.cover
