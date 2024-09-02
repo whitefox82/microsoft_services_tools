@@ -76,26 +76,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.86"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
-
-[[package]]
-name = "api_template"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "env_logger",
- "log",
- "reqwest",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1147,6 +1127,19 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "template_cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "dotenv",
+ "env_logger",
+ "log",
+ "reqwest",
+ "serde",
+ "tokio",
 ]
 
 [[package]]

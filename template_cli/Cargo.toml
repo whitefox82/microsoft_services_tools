@@ -1,17 +1,16 @@
 [package]
-name = "api_template"
+name = "template_cli"
 version = "0.1.0"
 edition = "2021"
-description = "A Rust-based CLI tool to retrieve OAuth 2.0 access tokens from the Microsoft identity platform using client credentials."
+description = "A command-line tool designed for interacting with Microsoft services, providing authentication and access token retrieval functionality using environment variables."
 authors = ["Bryan Abbott <bryan.abbott01@pm.me>"]
 repository = "https://github.com/whitefox82/microsoft_services_tools"
 
 [dependencies]
-anyhow = "1.0"
 clap = { version = "4.0", features = ["derive"] }
 dotenv = "0.15"
 env_logger = "0.11.5"
 log = "0.4"
-reqwest = { version = "0.12.7", features = ["json"] }
+reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }
