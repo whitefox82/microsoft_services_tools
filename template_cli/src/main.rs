@@ -2,7 +2,7 @@ mod auth;
 
 use clap::{Arg, Command};
 use env_logger::Env;
-use log::{debug, error, info, trace, warn, LevelFilter};
+use log::{debug, error, info, warn, LevelFilter};
 
 #[tokio::main]
 async fn main() {
@@ -10,12 +10,6 @@ async fn main() {
     let matches = Command::new("template_cli")
         .version("1.0")
         .about("A template CLI app demonstrating authentication with Microsoft API")
-        .arg(
-            Arg::new("trace")
-                .long("trace")
-                .help("Sets the level of logging to TRACE")
-                .action(clap::ArgAction::SetTrue),
-        )
         .arg(
             Arg::new("debug")
                 .long("debug")
@@ -49,7 +43,6 @@ async fn main() {
         .get_matches();
 
     let log_level = match () {
-        _ if matches.get_flag("trace") => LevelFilter::Trace,
         _ if matches.get_flag("debug") => LevelFilter::Debug,
         _ if matches.get_flag("info") => LevelFilter::Info,
         _ if matches.get_flag("warn") => LevelFilter::Warn,

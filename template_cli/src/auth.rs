@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use log::{debug, error, info, warn};
 use reqwest::Client;
 use serde::Deserialize;
