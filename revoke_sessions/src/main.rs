@@ -17,9 +17,6 @@ use auth::get_access_token;
 struct AppConfig {
     #[arg(short, long, help = "User Principal Name")]
     upn: String,
-
-    #[arg(short, long, help = "Enable verbose logging")]
-    verbose: bool,
 }
 
 async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<()> {
@@ -60,16 +57,13 @@ async fn revoke_sign_in_sessions(access_token: &str, upn: &str) -> Result<()> {
     }
 }
 
-fn setup_logger(verbose: bool) {
+fn setup_logger() {
     let mut builder = Builder::from_default_env();
-    builder.filter(
-        None,
-        if verbose {
-            LevelFilter::Debug
-        } else {
-            LevelFilter::Info
-        },
-    );
+    builder.filter_level(if cfg!(debug_assertions) {
+        LevelFilter::Debug
+    } else {
+        LevelFilter::Info
+    });
     builder.init();
 }
 
@@ -77,7 +71,7 @@ fn setup_logger(verbose: bool) {
 async fn main() -> Result<()> {
     dotenv().ok();
     let config = AppConfig::parse();
-    setup_logger(config.verbose);
+    setup_logger();
 
     info!("Starting RevokeSessionService");
     debug!("Configuration: {:?}", config);
@@ -86,7 +80,7 @@ async fn main() -> Result<()> {
     let client_id = env::var("CLIENT_ID").context("CLIENT_ID not set in .env file")?;
     let client_secret = env::var("CLIENT_SECRET").context("CLIENT_SECRET not set in .env file")?;
 
-    let access_token = get_access_token(&tenant_id, &client_id, &client_secret, config.verbose)
+    let access_token = get_access_token(&tenant_id, &client_id, &client_secret)
         .await
         .context("Failed to obtain access token")?;
 

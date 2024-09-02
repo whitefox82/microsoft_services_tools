@@ -12,7 +12,6 @@ pub async fn get_access_token(
     tenant_id: &str,
     client_id: &str,
     client_secret: &str,
-    verbose: bool,
 ) -> Result<String> {
     let client = Client::new();
     let url = format!(
@@ -27,9 +26,7 @@ pub async fn get_access_token(
         ("grant_type", "client_credentials"),
     ];
 
-    if verbose {
-        debug!("Requesting access token from: {}", url);
-    }
+    debug!("Requesting access token from: {}", url);
 
     let response = client
         .post(&url)
