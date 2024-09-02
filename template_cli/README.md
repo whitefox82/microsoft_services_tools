@@ -15,8 +15,7 @@ Before running the tool, ensure you have the following:
 
 - Rust installed on your system.
 - A Microsoft Azure app registration with a `client_id`, `client_secret`, and `tenant_id`.
-- The following Microsoft Graph API permission granted to your Azure app registration:
-  - **`Application.ReadWrite.All`**: Allows the application to read and write to all applications.
+- Any Microsoft Graph API permission granted to your Azure app registration
 - A `.env` file containing your Azure credentials.
 
 ## Installation
