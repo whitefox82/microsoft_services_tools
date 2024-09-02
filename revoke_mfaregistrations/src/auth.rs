@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use log::debug;
+use log::{debug, error, info};
 use reqwest::Client;
 use serde::Deserialize;
 
@@ -12,7 +12,6 @@ pub async fn get_access_token(
     tenant_id: &str,
     client_id: &str,
     client_secret: &str,
-    verbose: bool,
 ) -> Result<String> {
     let client = Client::new();
     let url = format!(
@@ -27,9 +26,9 @@ pub async fn get_access_token(
         ("grant_type", "client_credentials"),
     ];
 
-    if verbose {
-        debug!("Requesting access token from: {}", url);
-    }
+    info!("Requesting access token for tenant ID: {}", tenant_id);
+    debug!("Request URL: {}", url);
+    debug!("Request parameters: {:?}", params);
 
     let response = client
         .post(&url)
@@ -39,16 +38,19 @@ pub async fn get_access_token(
         .context("Failed to send request to obtain access token")?;
 
     if response.status().is_success() {
+        info!("Access token request successful.");
         let token_response = response
             .json::<AccessTokenResponse>()
             .await
             .context("Failed to parse access token response")?;
+        debug!("Received access token: {}", token_response.access_token);
         Ok(token_response.access_token)
     } else {
         let error_text = response
             .text()
             .await
             .context("Failed to read error response text")?;
+        error!("HTTP error during access token request: {}", error_text);
         Err(anyhow::anyhow!("HTTP error: {}", error_text))
     }
 }

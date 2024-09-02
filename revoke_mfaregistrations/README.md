@@ -9,11 +9,18 @@
 
 ## Prerequisites
 
-- Rust installed on your system.
-- A Microsoft Azure app registration with a `client_id`, `client_secret`, and `tenant_id`.
-- The following Microsoft Graph API permission granted to your Azure app registration:
-  - **`UserAuthenticationMethod.ReadWrite.All`**: Allows the application to read and write user authentication methods.
-- A `.env` file containing your Azure credentials.
+- **Rust** installed on your system.
+- A **Microsoft Azure app registration** with a `client_id`, `client_secret`, and `tenant_id`.
+- The following **Microsoft Graph API permissions** granted to your Azure app registration (all should be application permissions):
+  - **`UserAuthenticationMethod.ReadWrite.All`**: Allows the application to read and update user authentication methods.
+  - **`User.Read.All`**: Allows the application to read the profile of every user in the directory.
+  - **`User.ReadWrite.All`**: Allows the application to read and write data in user profiles.
+  - **`User.ManageIdentities.All`**: Allows the application to manage user identities, including resetting MFA or other authentication methods.
+- A **`.env` file** containing your Azure credentials with the following keys:
+  - `TENANT_ID`: Your Azure Active Directory tenant ID.
+  - `CLIENT_ID`: The client ID of your Azure app registration.
+  - `CLIENT_SECRET`: The client secret of your Azure app registration.
+
 
 ## Installation
 
