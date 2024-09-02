@@ -158,7 +158,7 @@ async fn main() -> Result<()> {
 
     let matches = Command::new("revoke_mfaregistrations")
         .version("1.0")
-        .author("Bryan Abbott <bryan.abbott@fusionnetworks.co.nz>")
+        .author("Bryan Abbott <bryan.abbott01@pm.me>")
         .about("Requires MFA re-registration using the Microsoft API")
         .arg(
             Arg::new("upn")
