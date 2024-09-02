@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use dotenv::dotenv;
 use env_logger::Builder;
-use log::{debug, error, info, LevelFilter};
+use log::{debug, info, LevelFilter};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -206,11 +206,14 @@ async fn process_directory_roles(api_client: &GraphApiClient) -> Result<Vec<Stri
 
     info!("Fetched {} directory roles", roles.len());
     for role in roles {
-        println!("Role ID: {}, DisplayName: {}", role.id, role.display_name);
+        debug!(
+            "Processing role - ID: {}, DisplayName: {}",
+            role.id, role.display_name
+        );
         let members = api_client.fetch_directory_role_members(&role.id).await?;
         for member in members {
-            println!(
-                " - Member ID: {}, DisplayName: {}, UserPrincipalName: {}",
+            debug!(
+                "Processing member - ID: {}, DisplayName: {}, UserPrincipalName: {}",
                 member.id, member.display_name, member.user_principal_name
             );
 
@@ -220,25 +223,25 @@ async fn process_directory_roles(api_client: &GraphApiClient) -> Result<Vec<Stri
             {
                 Ok(mailbox_settings) => {
                     debug!(
-                        "Mailbox settings for {}: {:?}",
+                        "Retrieved mailbox settings for {}: {:?}",
                         member.user_principal_name, mailbox_settings
                     );
                     if let Some(purpose) = mailbox_settings.user_purpose {
                         if purpose.to_lowercase() == "shared" {
+                            info!("Found shared mailbox: {}", member.user_principal_name);
                             shared_mailboxes.push(member.user_principal_name);
                         }
                     }
                 }
                 Err(e) => {
-                    error!(
-                        "Failed to fetch mailbox settings for {}: {:?}",
+                    debug!(
+                        "Failed to retrieve mailbox settings for {}: {:?}",
                         member.user_principal_name, e
                     );
                 }
             }
         }
     }
-
     Ok(shared_mailboxes)
 }
 
@@ -261,7 +264,13 @@ async fn main() -> Result<()> {
 
     let api_client = GraphApiClient::new(access_token);
 
+    info!("Processing directory roles");
     let shared_mailboxes = process_directory_roles(&api_client).await?;
+
+    info!(
+        "Processing complete. Found {} shared mailboxes",
+        shared_mailboxes.len()
+    );
 
     println!("\nShared Mailboxes:");
     for mailbox in shared_mailboxes {
